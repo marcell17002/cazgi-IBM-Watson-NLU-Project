@@ -10,10 +10,12 @@ class App extends React.Component {
   value of the state, will be returned. The initial input mode
   is set to text
   */
-  state = {innercomp:<textarea rows="4" cols="50" id="textinput"/>,
-            mode: "text",
+  state = {
+          innercomp:<textarea rows="4" cols="50" id="textinput"/>,
+          mode: "text",
           sentimentOutput:[],
-          sentiment:true
+          sentiment:true,
+          label:'text'
         }
   
   /*
@@ -23,6 +25,7 @@ class App extends React.Component {
   */
  
   renderOutput = (input_mode)=>{
+    this.setState({label:input_mode})
     let rows = 1
     let mode = "url"
     //If the input mode is text make it 4 lines
@@ -49,8 +52,9 @@ class App extends React.Component {
         let output = data.label;
         let color = "white"
         switch(output) {
-          case "positive": color = "black";break;
-          case "negative": color = "black";break;
+          case "positive": color = "green";break;
+          case "negative": color = "red";break;
+          case "neutral": color = "yellow";break;
           default: color = "black";
         }
         output = <div style={{color:color,fontSize:20}}>{output}</div>
@@ -75,13 +79,13 @@ class App extends React.Component {
   render() {
     return (  
       <div className="App">
-      <button className="btn btn-info" onClick={()=>{this.renderOutput('text')}}>Text</button>
-        <button className="btn btn-dark"  onClick={()=>{this.renderOutput('url')}}>URL</button>
+        <button className={`btn ${this.state.label==='text' ? 'btn-info':'btn-dark'}`} onClick={()=>{this.renderOutput('text')}}>Text</button>
+        <button className={`btn ml-3 ${this.state.label==='url' ? 'btn-info':'btn-dark'}`}  onClick={()=>{this.renderOutput('url')}}>URL</button>
         <br/><br/>
         {this.state.innercomp}
         <br/>
         <button className="btn-primary" onClick={this.sendForSentimentAnalysis}>Analyze Sentiment</button>
-        <button className="btn-primary" onClick={this.sendForEmotionAnalysis}>Analyze Emotion</button>
+        <button className="btn-primary ml-3" onClick={this.sendForEmotionAnalysis}>Analyze Emotion</button>
         <br/>
             {this.state.sentimentOutput}
       </div>
